@@ -2,47 +2,57 @@ import type { UploadOptions, StreamEvent } from "../types/upload";
 import { parseNdjsonStream } from "./ndjson";
 
 /**
- * Upload chunks to the streaming endpoint
+ * Upload chunks to the streaming endpoint - one chunk per request
  * @param options - Upload configuration
  */
 export async function uploadChunks(options: UploadOptions): Promise<void> {
     const { url, chunks, resumeFrom = 0, signal, onEvent } = options;
 
-    const headers: Record<string, string> = {
-        "Content-Type": "application/x-ndjson",
-        "Accept": "application/x-ndjson",
-    };
+    console.log(`Starting upload: ${chunks.length} chunks, resume from ${resumeFrom}`);
 
-    if (resumeFrom > 0) {
-        headers["X-Resume-From-Chunk"] = String(resumeFrom);
+    // Send each chunk as a separate request
+    for (let i = resumeFrom; i < chunks.length; i++) {
+        const chunk = chunks[i];
+
+        const headers: Record<string, string> = {
+            "Content-Type": "application/json",
+            "Accept": "application/x-ndjson",
+            "X-Chunk-Index": String(i),
+            "X-Total-Chunks": String(chunks.length),
+        };
+
+        if (resumeFrom > 0) {
+            headers["X-Resume-From-Chunk"] = String(resumeFrom);
+        }
+
+        const body = JSON.stringify(chunk);
+
+        console.log(`Uploading chunk ${i}/${chunks.length}...`);
+
+        const res = await fetch(url, {
+            method: "POST",
+            headers,
+            body,
+            signal,
+        });
+
+        if (!res.ok) {
+            throw new Error(`Upload failed for chunk ${i}: ${res.status} ${res.statusText}`);
+        }
+
+        if (!res.body) {
+            throw new Error(`No response body for chunk ${i}`);
+        }
+
+        const reader = res.body.getReader();
+
+        // Parse response stream for this chunk
+        await parseNdjsonStream(reader, (data: StreamEvent) => {
+            onEvent?.(data);
+        });
+
+        console.log(`Chunk ${i} completed`);
     }
 
-    // Use Blob for body to support HTTP/1.1 (standard upload)
-    const ndjsonLines = chunks.map((c) => JSON.stringify(c) + "\n");
-    const body = new Blob(ndjsonLines, { type: "application/x-ndjson" });
-
-    console.log("Upload request", url, headers, body);
-
-    const res = await fetch(url, {
-        method: "POST",
-        headers,
-        body,
-        signal,
-    });
-
-    console.log("Upload response", res);
-
-    if (!res.ok) {
-        throw new Error(`Upload failed: ${res.status} ${res.statusText}`);
-    }
-
-    if (!res.body) {
-        throw new Error("No response body");
-    }
-
-    const reader = res.body.getReader();
-
-    await parseNdjsonStream(reader, (data: StreamEvent) => {
-        onEvent?.(data);
-    });
+    console.log("All chunks uploaded successfully");
 }

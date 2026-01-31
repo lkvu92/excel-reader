@@ -53,7 +53,7 @@ export default function UploadPage() {
             // Gửi đến worker để parse
             workerRef.current.postMessage({
                 arrayBuffer,
-                chunkSize: 200,
+                chunkSize: 300,
             });
 
             workerRef.current.onmessage = async (e) => {
@@ -67,7 +67,7 @@ export default function UploadPage() {
 
                 // Tạo chunk requests
                 const fileId = `upload-${Date.now()}-${file.name}`;
-                const rowChunks = chunkArray(rows, 200);
+                const rowChunks = chunkArray(rows, 300);
                 const chunkRequests: ChunkRequest[] = [];
 
                 for (let i = 0; i < rowChunks.length; i++) {
