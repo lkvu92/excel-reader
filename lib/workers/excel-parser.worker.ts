@@ -9,8 +9,7 @@ interface WorkerResponse {
     rows: Array<{
         rowIndex: number;
         email: string;
-        // first_name: string;
-        // last_name: string;
+        name: string;
         phone: string;
         address: string;
         company: string;
@@ -31,8 +30,7 @@ self.onmessage = async (e: MessageEvent<WorkerRequest>) => {
         const rows = json.map((r: any, idx: number) => ({
             rowIndex: idx,
             email: String(r.email || r.Email || r["email"] || "").trim(),
-            // first_name: String(r.first_name || r.FirstName || r["first_name"] || "").trim(),
-            // last_name: String(r.last_name || r.LastName || r["last_name"] || "").trim(),
+            name: String(r.name || r.Name || r["name"] || "").trim(),
             phone: String(r.phone || r.Phone || r["phone"] || "").trim(),
             address: String(r.address || r.Address || r["address"] || "").trim(),
             company: String(r.company || r.Company || r["company"] || "").trim(),

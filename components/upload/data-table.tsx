@@ -39,33 +39,31 @@ export function DataTable({ rows, errors }: DataTableProps) {
     return (
         <Card>
             <CardHeader>
-                <CardTitle>Dữ liệu đã xử lý</CardTitle>
+                <CardTitle>Processed Data</CardTitle>
                 <p className="text-sm text-muted-foreground">
-                    {rows.length} dòng đã xử lý
+                    {rows.length} rows processed
                     {errors.length > 0 && (
                         <span className="text-destructive ml-2">
-                            ({errors.filter(e => e.rowIndex !== null).length} lỗi)
+                            ({errors.filter(e => e.rowIndex !== null).length} errors)
                         </span>
                     )}
                 </p>
             </CardHeader>
             <CardContent>
-                <div className="max-h-[400px] overflow-auto rounded-md border">
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead className="w-[80px]">Dòng</TableHead>
-                                <TableHead>Email</TableHead>
-                                {/* <TableHead>Họ</TableHead> */}
-                                {/* <TableHead>Tên</TableHead> */}
-                                <TableHead>Số điện thoại</TableHead>
-                                <TableHead>Địa chỉ</TableHead>
-                                <TableHead>Company</TableHead>
-                                <TableHead>Note</TableHead>
-                                <TableHead className="w-[100px]">Trạng thái</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
+                <Table containerClassName="max-h-[400px] overflow-auto rounded-md border">
+                    <TableHeader className="bg-muted sticky top-0 z-20 shadow-sm">
+                        <TableRow>
+                            <TableHead className="w-[80px] bg-muted">Row</TableHead>
+                            <TableHead className="bg-muted">Email</TableHead>
+                            <TableHead className="bg-muted">Name</TableHead>
+                            <TableHead className="bg-muted">Phone</TableHead>
+                            <TableHead className="bg-muted">Address</TableHead>
+                            <TableHead className="bg-muted">Company</TableHead>
+                            <TableHead className="bg-muted">Note</TableHead>
+                            <TableHead className="w-[100px] bg-muted">Status</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
                             {rows.map((row) => {
                                 const rowErrors = errorMap.get(row.rowIndex);
                                 const hasError = rowErrors && rowErrors.length > 0;
@@ -81,8 +79,7 @@ export function DataTable({ rows, errors }: DataTableProps) {
                                             {row.rowIndex + 1}
                                         </TableCell>
                                         <TableCell>{row.email}</TableCell>
-                                        {/* <TableCell>{row.first_name}</TableCell> */}
-                                        {/* <TableCell>{row.last_name}</TableCell> */}
+                                        <TableCell>{row.name}</TableCell>
                                         <TableCell>{row.phone}</TableCell>
                                         <TableCell>{row.address}</TableCell>
                                         <TableCell>{row.company}</TableCell>
@@ -90,7 +87,7 @@ export function DataTable({ rows, errors }: DataTableProps) {
                                         <TableCell>
                                             {hasError ? (
                                                 <Badge variant="destructive" className="text-xs">
-                                                    Lỗi
+                                                    Error
                                                 </Badge>
                                             ) : (
                                                 <Badge variant="secondary" className="text-xs">
@@ -103,7 +100,6 @@ export function DataTable({ rows, errors }: DataTableProps) {
                             })}
                         </TableBody>
                     </Table>
-                </div>
             </CardContent>
         </Card>
     );

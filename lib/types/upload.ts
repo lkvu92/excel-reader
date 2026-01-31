@@ -4,8 +4,7 @@
 export interface RowData {
     rowIndex: number;
     email: string;
-    // first_name: string;
-    // last_name: string;
+    name: string;
     phone: string;
     address: string;
     company: string;

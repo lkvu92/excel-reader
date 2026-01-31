@@ -29,15 +29,15 @@ export function UploadProgress({
     const getStatusText = () => {
         switch (status) {
             case "uploading":
-                return "Đang tải lên...";
+                return "Uploading...";
             case "paused":
-                return "Đã tạm dừng";
+                return "Paused";
             case "completed":
-                return "Hoàn thành";
+                return "Completed";
             case "error":
-                return "Lỗi tải lên";
+                return "Upload error";
             default:
-                return "Sẵn sàng";
+                return "Ready to upload";
         }
     };
 
@@ -56,12 +56,12 @@ export function UploadProgress({
 
                 <div>
                     <div className="flex justify-between text-sm mb-2">
-                        <span className="text-muted-foreground">Tiến độ</span>
+                        <span className="text-muted-foreground">Progess</span>
                         <span className="font-medium">{percentage}%</span>
                     </div>
                     <Progress value={percentage} className="h-2" />
                     <p className="text-xs text-muted-foreground mt-2 text-center">
-                        {progress.processed} / {progress.total} chunks đã xử lý
+                        {progress.processed} / {progress.total} chunks processed
                     </p>
                 </div>
 
@@ -70,19 +70,19 @@ export function UploadProgress({
                         {status === "uploading" && onPause && (
                             <Button onClick={onPause} variant="outline" size="sm">
                                 <Pause className="h-4 w-4 mr-2" />
-                                Tạm dừng
+                                Pause
                             </Button>
                         )}
                         {status === "paused" && onResume && (
                             <Button onClick={onResume} size="sm">
                                 <Play className="h-4 w-4 mr-2" />
-                                Tiếp tục
+                                Resume
                             </Button>
                         )}
                         {onCancel && (
                             <Button onClick={onCancel} variant="destructive" size="sm">
                                 <X className="h-4 w-4 mr-2" />
-                                Hủy
+                                Cancel
                             </Button>
                         )}
                     </div>

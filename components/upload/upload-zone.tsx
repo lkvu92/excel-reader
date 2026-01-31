@@ -54,10 +54,10 @@ export function UploadZone({ onFileSelect, disabled, error }: UploadZoneProps) {
                 >
                     <Upload className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
                     <h3 className="text-lg font-semibold mb-2">
-                        Tải lên file Excel
+                        Upload Excel File
                     </h3>
                     <p className="text-sm text-muted-foreground mb-4">
-                        Kéo thả file Excel vào đây hoặc nhấn để chọn file
+                        Drag and drop an Excel file here or click to select a file
                     </p>
                     <input
                         type="file"
@@ -69,7 +69,7 @@ export function UploadZone({ onFileSelect, disabled, error }: UploadZoneProps) {
                     />
                     <label htmlFor="file-upload">
                         <Button asChild disabled={disabled}>
-                            <span>Chọn file</span>
+                            <span>Select File</span>
                         </Button>
                     </label>
                     {error && (
