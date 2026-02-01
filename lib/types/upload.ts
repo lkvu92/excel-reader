@@ -3,6 +3,7 @@
 // ==================== Row Data ====================
 export interface RowData {
     rowIndex: number;
+    no: string;
     email: string;
     name: string;
     phone: string;

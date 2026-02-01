@@ -10,6 +10,8 @@ import type { UploadStatus, UploadProgress as UploadProgressType } from "@/lib/t
 interface UploadProgressProps {
     status: UploadStatus;
     progress: UploadProgressType;
+    percentage?: number;
+    label?: string;
     onPause?: () => void;
     onResume?: () => void;
     onCancel?: () => void;
@@ -18,13 +20,17 @@ interface UploadProgressProps {
 export function UploadProgress({
     status,
     progress,
+    percentage: manualPercentage,
+    label = "chunks",
     onPause,
     onResume,
     onCancel,
 }: UploadProgressProps) {
-    const percentage = progress.total > 0
+    const calculatedPercentage = progress.total > 0
         ? Math.round((progress.processed / progress.total) * 100)
         : 0;
+
+    const percentage = manualPercentage !== undefined ? manualPercentage : calculatedPercentage;
 
     const getStatusText = () => {
         switch (status) {
@@ -61,7 +67,7 @@ export function UploadProgress({
                     </div>
                     <Progress value={percentage} className="h-2" />
                     <p className="text-xs text-muted-foreground mt-2 text-center">
-                        {progress.processed} / {progress.total} chunks processed
+                        {progress.processed} / {progress.total} {label} processed
                     </p>
                 </div>
 
